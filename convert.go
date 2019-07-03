@@ -111,24 +111,12 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 			seen[current.Identifier] = struct{}{}
 		}
 
-		switch len(current.Needs) {
-		case 0:
-			// already done the required work above
-		case 1:
-			needed := current.Needs[0]
+		for _, needed := range current.Needs {
 			act, ok := actByID[needed]
 			if !ok {
 				return nil, errs.Errorf("Resolves to invalid action `%s'", needed)
 			}
 			queue = append(queue, act)
-		default:
-			for _, needed := range current.Needs {
-				act, ok := actByID[needed]
-				if !ok {
-					return nil, errs.Errorf("Resolves to invalid action `%s'", needed)
-				}
-				queue = append(queue, act)
-			}
 		}
 	}
 
