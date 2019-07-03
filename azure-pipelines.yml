@@ -1,0 +1,35 @@
+trigger:
+- "*"
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  GOBIN:  '$(GOPATH)/bin'
+  GOROOT: '/usr/local/go1.11'
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath'
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)'
+  outputPath: ./bin/migrate-actions
+
+steps:
+- bash: |
+    mkdir -p '$(GOBIN)'
+    mkdir -p '$(GOPATH)/pkg'
+    mkdir -p '$(modulePath)'
+    shopt -s extglob
+    mv !(gopath) '$(modulePath)'
+    echo '##vso[task.prependpath]$(GOBIN)'
+    echo '##vso[task.prependpath]$(GOROOT)/bin'
+  displayName: 'Set up the Go workspace'
+- bash: ./script/check-format
+  displayName: "Check format"
+  workingDirectory: $(modulePath)
+- bash: ./script/test
+  workingDirectory: $(modulePath)
+  displayName: "Test"
+- bash: ./script/build
+  workingDirectory: $(modulePath)
+  displayName: "Build"
+- bash: ./bin/migrate-actions --help
+  workingDirectory: $(modulePath)
+  displayName: "Run"
