@@ -60,6 +60,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// Execute executes the root command of converting the main.workflow file.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
