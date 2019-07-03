@@ -1,2 +1,2 @@
 #!/bin/bash
-go build -o bin/migrate-actions ./cli
+go build -o bin/migrate-actions ./migrate-actions
