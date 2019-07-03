@@ -41,7 +41,6 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		countsByEvent[wf.On.String()] = countsByEvent[wf.On.String()] + 1
 	}
 
-	// Create a file per workflow
 	for _, wf := range configuration.Workflows {
 		// TODO schedules
 		w := workflow{
@@ -94,26 +93,18 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 	reverseRoute := make([]*model.Action, 0)
 	seen := make(map[string]struct{})
 
-	type qNode struct {
-		current *model.Action
-	}
-
-	queue := make([]qNode, 0)
-
+	queue := make([]*model.Action, 0)
 	for _, resolveID := range workflow.Resolves {
 		act, ok := actByID[resolveID]
 		if !ok {
 			return nil, errs.Errorf("Resolves to invalid action `%s'", resolveID)
 		}
-		queue = append(queue, qNode{
-			current: act,
-		})
+		queue = append(queue, act)
 	}
 
 	for len(queue) > 0 {
-		head := queue[0]
+		current := queue[0]
 		queue = queue[1:]
-		current := head.current
 
 		if _, ok := seen[current.Identifier]; !ok {
 			reverseRoute = append(reverseRoute, current)
@@ -122,23 +113,21 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 
 		switch len(current.Needs) {
 		case 0:
-			// done
+			// already done the required work above
 		case 1:
 			needed := current.Needs[0]
 			act, ok := actByID[needed]
 			if !ok {
 				return nil, errs.Errorf("Resolves to invalid action `%s'", needed)
 			}
-			head.current = act
-			queue = append(queue, head)
+			queue = append(queue, act)
 		default:
 			for _, needed := range current.Needs {
 				act, ok := actByID[needed]
 				if !ok {
 					return nil, errs.Errorf("Resolves to invalid action `%s'", needed)
 				}
-				c := qNode{current: act}
-				queue = append(queue, c)
+				queue = append(queue, act)
 			}
 		}
 	}

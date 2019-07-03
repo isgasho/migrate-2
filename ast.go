@@ -27,4 +27,3 @@ type OutputFile struct {
 	Path    string
 	Content string
 }
-
