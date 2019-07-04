@@ -34,7 +34,7 @@ func toID(s string) string {
 	return op.String()
 }
 
-var confusingFileNameRE = regexp.MustCompile(`[@\!{}$/]+`)
+var confusingFileNameRE = regexp.MustCompile(`[@\!{}$/\s]+`)
 
 func workflowIdentifierToFileName(s string) string {
 	s = strings.TrimSpace(s)
