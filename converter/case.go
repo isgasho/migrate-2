@@ -33,3 +33,12 @@ func toID(s string) string {
 	}
 	return op.String()
 }
+
+var confusingFileNameRE = regexp.MustCompile(`[@\!{}$/]+`)
+
+func workflowIdentifierToFileName(s string) string {
+	s = strings.TrimSpace(s)
+	s = confusingFileNameRE.ReplaceAllString(s, "-")
+	substrs := spaces.Split(strings.ToLower(s), -1)
+	return strings.Join(substrs, "-")
+}

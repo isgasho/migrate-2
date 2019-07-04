@@ -39,7 +39,8 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 
 	countsByEvent := make(map[string]int)
 	for _, wf := range configuration.Workflows {
-		countsByEvent[wf.On.String()] = countsByEvent[wf.On.String()] + 1
+		event := onToEvent(wf.On)
+		countsByEvent[event] = countsByEvent[event] + 1
 	}
 
 	for _, wf := range configuration.Workflows {
@@ -47,8 +48,8 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		w := workflow{
 			Name: wf.Identifier,
 			Jobs: make(map[string]job, 0),
-			On:   wf.On.String(),
 		}
+		writeOn(&w, wf.On)
 		// Make a job per resolve target
 		acts, err := serializeWorkflow(wf, actByID)
 		if err != nil {
@@ -67,6 +68,10 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 			ca := &action{
 				Uses: a.Uses.String(),
 				Name: a.Identifier,
+				Env:  a.Env,
+			}
+			if a.Runs != nil {
+				ca.Entrypoint = strings.Join(a.Runs.Split(), " ")
 			}
 			if a.Args != nil {
 				ca.Args = strings.Join(a.Args.Split(), " ")
@@ -76,16 +81,37 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		w.Jobs[id] = j
 
 		// if we have a single workflow for an event, name the file after that event
-		if countsByEvent[wf.On.String()] == 1 {
-			w.fileName = fmt.Sprintf("%s.yml", wf.On.String())
+		ev := onToEvent(wf.On)
+		if countsByEvent[ev] == 1 {
+			w.fileName = fmt.Sprintf("%s.yml", ev)
 		} else {
-			w.fileName = fmt.Sprintf("%s-%s.yml", wf.On.String(), id)
+			w.fileName = fmt.Sprintf("%s-%s.yml", ev, workflowIdentifierToFileName(wf.Identifier))
 		}
 
 		converted.workflows = append(converted.workflows, &w)
 	}
 
 	return &converted, nil
+}
+func writeOn(w *workflow, on model.On) {
+	if o, ok := on.(*model.OnSchedule); ok {
+		w.OnSchedule = map[string][]map[string]string{
+			"schedules": {
+				{
+					"cron": o.Expression,
+				},
+			},
+		}
+	} else {
+		w.On = on.String()
+	}
+}
+
+func onToEvent(on model.On) string {
+	if _, ok := on.(*model.OnSchedule); ok {
+		return "schedule"
+	}
+	return on.String()
 }
 
 // serializeWorkflow takes the graph from a v1 workflow, and serializes it via a breadth-first-search (which
@@ -138,9 +164,14 @@ func (converted *parsed) Files() ([]OutputFile, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		y := string(j)
+		y = strings.Replace(y, "__workflowKeyOn__", "on", 1)
+		y = strings.Replace(y, "__workflowKeyOnSchedule__", "on", 1)
+
 		of = append(of, OutputFile{
 			Path:    fmt.Sprintf("%s/%s", workflowDirectory, wf.fileName),
-			Content: string(j),
+			Content: string(y),
 		})
 	}
 

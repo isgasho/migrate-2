@@ -28,7 +28,7 @@ action "action one" {
   args = "echo hi"
 }`,
 		output: map[string]string{
-			".github/workflows/push.yml": `"on": push
+			".github/workflows/push.yml": `on: push
 name: workflow one
 jobs:
   actionOne:
@@ -77,7 +77,7 @@ action "F" {
 }
 `,
 		output: map[string]string{
-			".github/workflows/push.yml": `"on": push
+			".github/workflows/push.yml": `on: push
 name: fan in out
 jobs:
   A:
@@ -99,24 +99,178 @@ jobs:
 	})
 }
 
-func TestSchedules(t *testing.T) {
-	t.Skip("TODO")
+func TestConvertOneSchedules(t *testing.T) {
+	assertCorrect(t, eg{
+		input: `workflow "scheduled" {
+  on = "schedule(* * * * *)"
+  resolves = [
+    "A",
+  ]
+}
+
+workflow "scheduled two" {
+  on = "schedule(* * * * *)"
+  resolves = [
+    "A",
+  ]
+}
+
+action "A" { 
+  uses = "./A" 
+}
+`,
+		output: map[string]string{
+			".github/workflows/schedule-scheduled.yml": `on:
+  schedules:
+  - cron: '* * * * *'
+name: scheduled
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+`,
+			".github/workflows/schedule-scheduled-two.yml": `on:
+  schedules:
+  - cron: '* * * * *'
+name: scheduled two
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+`,
+		},
+	})
 }
 
 func TestMultipleWorkflows(t *testing.T) {
-	t.Skip("TODO")
+	assertCorrect(t, eg{
+		input: `workflow "one" {
+  on = "push"
+  resolves = [
+    "A",
+  ]
+}
+
+workflow "B" {
+  on = "push"
+  resolves = [
+    "A",
+  ]
+}
+
+workflow "C" {
+  on = "repository_dispatch"
+  resolves = [
+    "A",
+  ]
+}
+
+action "A" { 
+  uses = "./A" 
+}
+
+`,
+		output: map[string]string{
+			".github/workflows/push-one.yml": `on: push
+name: one
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+`,
+			".github/workflows/push-b.yml": `on: push
+name: B
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+`,
+			".github/workflows/repository_dispatch.yml": `on: repository_dispatch
+name: C
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+`,
+		},
+	})
 }
 
 func TestInvalidResolves(t *testing.T) {
-	t.Skip("TODO")
+	_, err := Parse(strings.NewReader(`
+workflow "a" {
+    on = "push"
+	resolves = ["not there"]
 }
-
-func TestInvalidNeeds(t *testing.T) {
-	t.Skip("TODO")
+`))
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "resolves unknown action")
 }
 
 func TestEnv(t *testing.T) {
-	t.Skip("TODO")
+	assertCorrect(t, eg{
+		input: `workflow "one" {
+  on = "push"
+  resolves = [
+    "A",
+  ]
+}
+
+action "A" { 
+  uses = "./A" 
+  env = {
+    ONE = "one v"
+    "TWO" = "two v"
+  }
+}
+`,
+		output: map[string]string{
+			".github/workflows/push.yml": `on: push
+name: one
+jobs:
+  A:
+    steps:
+    - name: A
+      uses: ./A
+      env:
+        ONE: one v
+        TWO: two v
+`,
+		},
+	})
+}
+
+func TestRuns(t *testing.T) {
+	assertCorrect(t, eg{
+		input: `workflow "workflow one" {
+  on = "push"
+  resolves = [
+    "action one",
+  ]
+}
+
+action "action one" {
+  uses = "docker://alpine"
+  runs = ["sh", "-c", "echo $GITHUB_SHA"] 
+}`,
+		output: map[string]string{
+			".github/workflows/push.yml": `on: push
+name: workflow one
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo $GITHUB_SHA
+`,
+		},
+	})
 }
 
 func assertCorrect(t *testing.T, eg eg) {
