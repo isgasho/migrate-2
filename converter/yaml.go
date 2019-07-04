@@ -37,10 +37,8 @@ func workflowToYAML(wf *workflow) string {
 		for _, act := range job.Actions {
 			if act.Name == "" {
 				writeLineF(w, "uses: %s", yamlQuote(act.Uses))
-			} else {
-				writeLineF(w, "name: %s", yamlQuote(act.Name))
-				writeLineF(w, "uses: %s", yamlQuote(act.Uses))
 			}
+			writeLineF(w, "uses: %s", yamlQuote(act.Uses))
 			if act.Args != "" {
 				writeLineF(w, "args: %s", yamlQuote(act.Args))
 			}
