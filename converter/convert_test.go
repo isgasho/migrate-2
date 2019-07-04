@@ -1,10 +1,11 @@
-package migrate
+package converter
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type eg struct {
@@ -126,7 +127,7 @@ func assertCorrect(t *testing.T, eg eg) {
 	require.NoError(t, err)
 
 	expectedFiles := make([]string, 0)
-	for p, _ := range eg.output {
+	for p := range eg.output {
 		expectedFiles = append(expectedFiles, p)
 	}
 

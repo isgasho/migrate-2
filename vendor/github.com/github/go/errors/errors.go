@@ -78,7 +78,6 @@
 //     }
 //
 // See the documentation for Frame.Format for more details.
-// Deprecated: Use github.com/pkg/errors instead.
 package errors
 
 import (
@@ -93,10 +92,8 @@ type _error struct {
 	*stack
 }
 
-// Deprecated: Use github.com/pkg/errors.Error instead.
 func (e _error) Error() string { return e.msg }
 
-// Deprecated: Use github.com/pkg/errors.Format instead.
 func (e _error) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
@@ -112,7 +109,6 @@ func (e _error) Format(s fmt.State, verb rune) {
 }
 
 // New returns an error with the supplied message.
-// Deprecated: Use github.com/pkg/errors.New instead.
 func New(message string) error {
 	return _error{
 		message,
@@ -122,7 +118,6 @@ func New(message string) error {
 
 // Errorf formats according to a format specifier and returns the string
 // as a value that satisfies error.
-// Deprecated: Use github.com/pkg/errors.Errorf instead.
 func Errorf(format string, args ...interface{}) error {
 	return _error{
 		fmt.Sprintf(format, args...),
@@ -133,7 +128,6 @@ func Errorf(format string, args ...interface{}) error {
 // Panic formats the output of a `recover` call, be it either an error, a
 // string message, or an arbitrary value. It creates a wrapped error with a
 // suitable stack trace pointing at the source of the panic.
-// Deprecated: Use github.com/pkg/errors.Errorf("panic: %v", err) instead.
 func Panic(panic interface{}) error {
 	stack := callers(3)
 	switch p := panic.(type) {
@@ -151,9 +145,7 @@ type cause struct {
 	msg   string
 }
 
-// Deprecated: Use github.com/pkg/errors instead.
 func (c cause) Error() string { return fmt.Sprintf("%s: %v", c.msg, c.Cause()) }
-// Deprecated: Use github.com/pkg/errors instead.
 func (c cause) Cause() error  { return c.cause }
 
 // wrapper is an error implementation returned by Wrap and Wrapf
@@ -163,7 +155,6 @@ type wrapper struct {
 	*stack
 }
 
-// Deprecated: Use github.com/pkg/errors instead.
 func (w wrapper) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
@@ -183,7 +174,6 @@ func (w wrapper) Format(s fmt.State, verb rune) {
 
 // Wrap returns an error annotating err with message.
 // If err is nil, Wrap returns nil.
-// Deprecated: Use github.com/pkg/errors.WithMessage instead.
 func Wrap(err error, message string) error {
 	if err == nil {
 		return nil
@@ -199,7 +189,6 @@ func Wrap(err error, message string) error {
 
 // Wrapf returns an error annotating err with the format specifier.
 // If err is nil, Wrapf returns nil.
-// Deprecated: Use github.com/pkg/errors.WithMessagef instead.
 func Wrapf(err error, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
@@ -224,7 +213,6 @@ func Wrapf(err error, format string, args ...interface{}) error {
 // If the error does not implement Cause, the original error will
 // be returned. If the error is nil, nil will be returned without further
 // investigation.
-// Deprecated: Use github.com/pkg/errors.Cause instead.
 func Cause(err error) error {
 	type causer interface {
 		Cause() error
