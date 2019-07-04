@@ -35,7 +35,7 @@ func workflowToYAML(wf *workflow) string {
 		list := &listContext{}
 		w = w.push(list)
 		for _, act := range job.Actions {
-			if act.Name == "" {
+			if act.Name != "" {
 				writeLineF(w, "uses: %s", yamlQuote(act.Uses))
 			}
 			writeLineF(w, "uses: %s", yamlQuote(act.Uses))
@@ -55,7 +55,7 @@ func writeLineF(w *stackedWriter, f string, vars ...interface{}) {
 	w.WriteLine(fmt.Sprintf(f, vars...))
 }
 
-var safeStartRE = regexp.MustCompile(`^[a-zA-Z]`)
+var safeStartRE = regexp.MustCompile(`^[\.a-zA-Z]`)
 
 func yamlQuote(s string) string {
 	if safeStartRE.MatchString(s) && !strings.Contains(s, `"`) {

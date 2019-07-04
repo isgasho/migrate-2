@@ -79,7 +79,7 @@ action "F" {
 }
 `,
 		output: map[string]string{
-			".github/workflows/push.yml": `"on": push
+			".github/workflows/push.yml": `on: push
 name: fan in out
 jobs:
   A:
