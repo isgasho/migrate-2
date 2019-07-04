@@ -32,4 +32,7 @@ steps:
   displayName: "Build"
 - bash: ./bin/migrate-actions --help
   workingDirectory: $(modulePath)
-  displayName: "Run"
+  displayName: "Check binary is runnable"
+- bash: ./script/functional-test
+  workingDirectory: $(modulePath)
+  displayName: "Functional test of binary"
