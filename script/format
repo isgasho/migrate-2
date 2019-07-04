@@ -1,2 +1,2 @@
 #!/bin/bash
-gofmt -w *.go cli/*.go
+go fmt ./...
