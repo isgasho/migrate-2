@@ -22,12 +22,12 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:ff3eb7e4acd421b672443df3502f48a85be70444ea3aaa480838bc77faaf7282"
+  digest = "1:145315cb7abf2c93fe31416f5c477096a560d86cd9491370ec09d490cd5a7523"
   name = "github.com/github/go"
   packages = ["errors"]
   pruneopts = "UT"
-  revision = "6253d0c1deb0fb9be63f096ac1eb762e7347734c"
-  version = "v1.2.0"
+  revision = "aa3331bda06b5a87c34bf06ea851e43d2da6e853"
+  version = "v1.1.2"
 
 [[projects]]
   digest = "1:69dea663bb54919e053b484677e0a2b4f21c8ea4aa6aef076e3a7f3308e30e36"
@@ -58,6 +58,14 @@
   pruneopts = "UT"
   revision = "481ba8d00bf398f51b211239a0c506e1c0654feb"
   source = "github.com/actions/hcl"
+
+[[projects]]
+  digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -92,6 +100,22 @@
   version = "v0.0.0"
 
 [[projects]]
+  digest = "1:e096613fb7cf34743d49af87d197663cfccd61876e2219853005a57baedfa562"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f2b07da1e2c38d5f12845a4f607e2e1018cbb1f5"
+  version = "v0.0.5"
+
+[[projects]]
+  digest = "1:c1b1102241e7f645bc8e0c22ae352e8f0dc6484b6cb4d132fa9f24174e0119e2"
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  version = "v1.0.3"
+
+[[projects]]
   digest = "1:5da8ce674952566deae4dbc23d07c85caafc6cfa815b0b3e03e41979cedb8750"
   name = "github.com/stretchr/testify"
   packages = [
@@ -117,6 +141,7 @@
     "github.com/actions/workflow-parser/model",
     "github.com/actions/workflow-parser/parser",
     "github.com/github/mu/errs",
+    "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
     "gopkg.in/yaml.v2",
