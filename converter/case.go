@@ -34,11 +34,12 @@ func toID(s string) string {
 	return op.String()
 }
 
-var confusingFileNameRE = regexp.MustCompile(`[@\!{}$/\s]+`)
+var notUnicodeLetterRE = regexp.MustCompile(`\PL+`)
 
 func workflowIdentifierToFileName(s string) string {
 	s = strings.TrimSpace(s)
-	s = confusingFileNameRE.ReplaceAllString(s, "-")
+	s = notUnicodeLetterRE.ReplaceAllString(s, "-")
 	substrs := spaces.Split(strings.ToLower(s), -1)
-	return strings.Join(substrs, "-")
+	s = strings.Join(substrs, "-")
+	return strings.Trim(s, "-")
 }

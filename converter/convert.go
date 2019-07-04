@@ -43,7 +43,9 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		countsByEvent[event] = countsByEvent[event] + 1
 	}
 
-	for _, wf := range configuration.Workflows {
+	fileNames := make(map[string]struct{})
+
+	for i, wf := range configuration.Workflows {
 		// TODO schedules
 		w := workflow{
 			Name: wf.Identifier,
@@ -85,7 +87,17 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		if countsByEvent[ev] == 1 {
 			w.fileName = fmt.Sprintf("%s.yml", ev)
 		} else {
-			w.fileName = fmt.Sprintf("%s-%s.yml", ev, workflowIdentifierToFileName(wf.Identifier))
+			converted := workflowIdentifierToFileName(wf.Identifier)
+			// if identifier can't be converted to something meaningful, just use a number
+			if converted == "" {
+				converted = fmt.Sprintf("%v", i + 1)
+			}
+			// or if due to conversion we end up with a duplicate, use suffix to make unique
+			if _, ok := fileNames[converted]; ok {
+				converted = fmt.Sprintf("%s-%v", converted, i + 1)
+			}
+			fileNames[converted] = struct{}{}
+			w.fileName = fmt.Sprintf("%s-%s.yml", ev, converted)
 		}
 
 		converted.workflows = append(converted.workflows, &w)
