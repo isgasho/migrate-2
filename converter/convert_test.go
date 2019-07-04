@@ -99,6 +99,45 @@ jobs:
 	})
 }
 
+func TestComments(t *testing.T) {
+	assertCorrect(t, eg{
+		input: `
+// Some header
+/* different comment */
+
+// Workflow comment
+workflow "workflow one" {
+  // on comment
+  on = "push"
+  resolves = [
+    "action one", // line comment
+  ]
+}
+
+action "action one" {
+ // pre comment
+  uses = "docker://alpine" // attribute line comment
+}`,
+		output: map[string]string{
+			".github/workflows/push.yml": `
+# Some header
+# different comment
+# Workflow comment
+# on comment
+"on": push
+name: workflow one
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine # attribute line comment
+      args: echo hi
+`,
+		},
+	})
+}
+
 func TestSchedules(t *testing.T) {
 	t.Skip("TODO")
 }
