@@ -1,0 +1,75 @@
+#!/bin/bash
+
+mkdir -p .github
+
+cat >.github/main.workflow <<FILE
+workflow "workflow one" {
+  on = "push"
+  resolves = [
+    "action one",
+  ]
+}
+
+workflow "per minute" {
+  on = "schedule(* * * * *)"
+  resolves = [
+    "action one",
+  ]
+}
+
+action "action one" {
+  uses = "docker://alpine"
+  runs = ["sh", "-c", "echo \$GITHUB_SHA"]
+}
+FILE
+
+./bin/migrate-actions
+
+failed="false"
+
+
+delta=$( diff <(find -s .github/workflows -type f) <(cat <<EXPECTED
+.github/workflows/push.yml
+.github/workflows/schedule.yml
+EXPECTED
+))
+
+if [[ "$delta" != "" ]]; then
+  failed="true"
+  echo "Files created differed from expected:"
+  printf "%s" "$diff"
+fi
+
+delta=$( diff <(cat .github/workflows/*.yml) <(cat <<EXPECTED
+on: push
+name: workflow one
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo \$GITHUB_SHA
+on:
+  schedules:
+  - cron: '* * * * *'
+name: per minute
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo \$GITHUB_SHA
+EXPECTED
+))
+
+if [[ "$delta" != "" ]]; then
+  failed="true"
+  echo "File output unexpected:"
+  printf "%s" "$delta"
+fi
+
+if [[ "$failed" == "true" ]]; then
+    exit 1
+fi
