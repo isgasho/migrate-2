@@ -1,4 +1,4 @@
-package migrate
+package converter
 
 type action struct {
 	Name string `yaml:",omitempty"`

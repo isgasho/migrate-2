@@ -1,13 +1,14 @@
-package migrate
+package converter
 
 import (
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/actions/workflow-parser/model"
 	"github.com/actions/workflow-parser/parser"
 	"github.com/github/mu/errs"
 	"gopkg.in/yaml.v2"
-	"io"
-	"strings"
 )
 
 const workflowDirectory = ".github/workflows"
