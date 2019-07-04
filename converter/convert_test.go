@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -28,8 +29,9 @@ action "action one" {
   args = "echo hi"
 }`,
 		output: map[string]string{
-			".github/workflows/push.yml": `"on": push
+			".github/workflows/push.yml": `on: push
 name: workflow one
+
 jobs:
   actionOne:
     name: action one
@@ -174,7 +176,10 @@ func assertCorrect(t *testing.T, eg eg) {
 	for _, f := range files {
 		allFiles = append(allFiles, f.Path)
 		if op, ok := eg.output[f.Path]; ok {
-			assert.Equal(t, op, f.Content)
+			matched := assert.Equal(t, op, f.Content)
+			if !matched {
+				fmt.Println(f.Content)
+			}
 		} else {
 			assert.Failf(t, "unexpected path %s", f.Path)
 		}

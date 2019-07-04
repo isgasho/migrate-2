@@ -8,7 +8,6 @@ import (
 	"github.com/actions/workflow-parser/model"
 	"github.com/actions/workflow-parser/parser"
 	"github.com/github/mu/errs"
-	"gopkg.in/yaml.v2"
 )
 
 const workflowDirectory = ".github/workflows"
@@ -134,13 +133,10 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 func (converted *parsed) Files() ([]OutputFile, error) {
 	of := make([]OutputFile, 0, len(converted.workflows))
 	for _, wf := range converted.workflows {
-		j, err := yaml.Marshal(wf)
-		if err != nil {
-			return nil, err
-		}
+		yaml := workflowToYAML(wf)
 		of = append(of, OutputFile{
 			Path:    fmt.Sprintf("%s/%s", workflowDirectory, wf.fileName),
-			Content: string(j),
+			Content: string(yaml),
 		})
 	}
 
