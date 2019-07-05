@@ -35,7 +35,7 @@ steps:
 - bash: ./script/build
   displayName: Build
   workingDirectory: $(wd)
-- bash: ls -l "$(wd)"
+- bash: ls -l "$(wd)/bin"
   displayName: See what is built
 - bash: ./script/test
   displayName: Test
