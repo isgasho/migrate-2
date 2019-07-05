@@ -32,4 +32,11 @@ steps:
   displayName: "Build"
 - bash: ./bin/migrate-actions --help
   workingDirectory: $(modulePath)
-  displayName: "Run"
+  displayName: "Check binary is runnable"
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.4'
+    addToPath: true
+- bash: ruby ./script/functional-test.rb
+  workingDirectory: $(modulePath)
+  displayName: "Functional test of binary"
