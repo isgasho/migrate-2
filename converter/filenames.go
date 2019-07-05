@@ -5,6 +5,8 @@ import (
 	"github.com/actions/workflow-parser/model"
 )
 
+const itAintWorthHangingOverThis = 10000
+
 type fileNameSet struct {
 	countsByEvent map[string]int
 	fileNames     map[string]struct{}
@@ -23,23 +25,31 @@ func newFilenames(wfs []*model.Workflow) *fileNameSet {
 	return &fs
 }
 
-func (fs *fileNameSet ) create(wf *model.Workflow, i int) string {
+func (fs *fileNameSet) create(wf *model.Workflow, i int) string {
 	ev := onToEvent(wf.On)
 	fn := ""
 	if fs.countsByEvent[ev] == 1 {
 		fn = fmt.Sprintf("%s.yml", ev)
 	} else {
-		converted := workflowIdentifierToFileName(wf.Identifier)
+		id := workflowIdentifierToFileName(wf.Identifier)
 		// if identifier can't be converted to something meaningful, just use a number
-		if converted == "" {
-			converted = fmt.Sprintf("%v", i + 1)
-		}
 		// if we collapsed to something non-unique, append index
-		if _, ok := fs.fileNames[converted]; !ok  {
-			converted = fmt.Sprintf("%s-%v", converted, i + 1)
+		for i = 0; i < itAintWorthHangingOverThis; i++ {
+			c := id
+			if i > 0 {
+				c = fmt.Sprintf("%s-%v", id, i+1)
+			}
+			if _, ok := fs.fileNames[forEvent(ev, c)]; !ok {
+				id = c
+				break
+			}
 		}
-		fn = fmt.Sprintf("%s-%s.yml", ev, converted)
+		fn = forEvent(ev, id)
 	}
 	fs.fileNames[fn] = struct{}{}
 	return fn
+}
+
+func forEvent(event, name string) string {
+	return fmt.Sprintf("%s-%s.yml", event, name)
 }

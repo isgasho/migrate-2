@@ -9,7 +9,7 @@ import (
 func Test_workflowIdentifierToFileName(t *testing.T) {
 	tests := []struct {
 		input string
-		want string
+		want  string
 	}{
 		{
 			"some spaces  here",
