@@ -2,7 +2,8 @@ trigger:
 - "*"
 
 variables:
-  wd: $(Pipeline.Workspace)/go/src/github.com/actions/migrate
+  rp: go/src/github.com/actions/migrate
+  wd: $(Pipeline.Workspace)/$(rp)
   GOPATH: $(Pipeline.Workspace)/go
 
 strategy:
@@ -21,46 +22,24 @@ pool:
   vmImage: $(os)
 
 steps:
-- bash: |
-    set -x
-    # get correct path on windows
-    working="$(wd)"
-    sd="$(Build.SourcesDirectory)"
-    if [[ "$(isWin)" == "true" ]]; then
-      working=`cygpath --unix "$(wd)"`
-      sd=`cygpath --unix "$sd"`
-    fi
-    echo "$working"
-    dirname "$working" | xargs mkdir -p
-    cd ..
-    cp -R "$sd" "$working"
-  displayName: setup working dir, copying across checkout to gopath
-- bash: |
-    set -x
-    # get correct path on windows
-    working="$(wd)"
-    if [[ "$(isWin)" == "true" ]]; then
-      working=`cygpath --unix "$(wd)"`
-    fi
-    echo "$working" | xargs dirname | xargs ls -l
-    ls -l "$working"
-    [[ -d "$working" ]] # extra careful
-  displayName: verify working directory is present
+- checkout: self
+  path: $(rp)
 - task: GoTool@0
   inputs:
     version: '1.12'
     workingDirectory: $(wd)
 - bash: ./script/build
+  displayName: Check format
+  continueOnError: true
+  workingDirectory: $(wd)
+- bash: ./script/build
   displayName: Build
   workingDirectory: $(wd)
 - bash: ls -l "$(wd)"
   displayName: See what is built
-- task: Go@0
+- bash: ./script/test
   displayName: Test
-  inputs:
-    command: test
-    arguments: "./..."
-    workingDirectory: $(wd)
+  workingDirectory: $(wd)
 - task: UseRubyVersion@0
   inputs:
     versionSpec: '>= 2.4'
