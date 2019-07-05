@@ -1,9 +1,11 @@
 package converter
 
 type action struct {
-	Name string `yaml:",omitempty"`
-	Uses string
-	Args string `yaml:",omitempty"`
+	Name       string `yaml:",omitempty"`
+	Uses       string
+	Args       string            `yaml:",omitempty"`
+	Env        map[string]string `yaml:",omitempty"`
+	Entrypoint string            `yaml:",omitempty"`
 }
 
 // converted over from a workflow
@@ -13,10 +15,11 @@ type job struct {
 }
 
 type workflow struct {
-	On       string
-	Name     string
-	fileName string
-	Jobs     map[string]job
+	On         string                         `yaml:"__workflowKeyOn__,omitempty"`
+	OnSchedule map[string][]map[string]string `yaml:"__workflowKeyOnSchedule__,omitempty"`
+	Name       string
+	fileName   string
+	Jobs       map[string]job
 }
 
 type parsed struct {
