@@ -34,7 +34,7 @@ func toID(s string) string {
 	return op.String()
 }
 
-var notUnicodeLetterRE = regexp.MustCompile(`\PL+`)
+var notUnicodeLetterRE = regexp.MustCompile(`[^\pL\pS\pN]+`)
 
 func workflowIdentifierToFileName(s string) string {
 	s = strings.TrimSpace(s)

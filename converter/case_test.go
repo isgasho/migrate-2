@@ -29,7 +29,7 @@ func Test_workflowIdentifierToFileName(t *testing.T) {
 		},
 		{
 			"hi😁",
-			"hi",
+			"hi😁",
 		},
 	}
 	for _, tt := range tests {
