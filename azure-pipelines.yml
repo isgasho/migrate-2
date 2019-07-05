@@ -25,7 +25,7 @@ steps:
   inputs:
     version: '1.12'
     workingDirectory: $(wd)
-- bash: ./script/build
+- bash: ./script/check-format
   displayName: Check format
   continueOnError: true
   workingDirectory: $(wd)
