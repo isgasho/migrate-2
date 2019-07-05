@@ -1,35 +1,70 @@
 trigger:
 - "*"
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
-  GOBIN:  '$(GOPATH)/bin'
-  GOROOT: '/usr/local/go1.11'
-  GOPATH: '$(system.defaultWorkingDirectory)/gopath'
-  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)'
-  outputPath: ./bin/migrate-actions
+  wd: $(Pipeline.Workspace)/go/src/github.com/actions/migrate
+  GOPATH: $(Pipeline.Workspace)/go
+
+strategy:
+  matrix:
+    windows:
+      os: vs2017-win2016
+      isWin: true
+    linux:
+      os: 'ubuntu-16.04'
+      isWin: false
+    osx:
+      os: macOS-10.13
+      isWin: false
+
+pool:
+  vmImage: $(os)
 
 steps:
 - bash: |
-    mkdir -p '$(GOBIN)'
-    mkdir -p '$(GOPATH)/pkg'
-    mkdir -p '$(modulePath)'
-    shopt -s extglob
-    mv !(gopath) '$(modulePath)'
-    echo '##vso[task.prependpath]$(GOBIN)'
-    echo '##vso[task.prependpath]$(GOROOT)/bin'
-  displayName: 'Set up the Go workspace'
-- bash: ./script/check-format
-  displayName: "Check format"
-  workingDirectory: $(modulePath)
-- bash: ./script/test
-  workingDirectory: $(modulePath)
-  displayName: "Test"
+    set -x
+    # get correct path on windows
+    working="$(wd)"
+    sd="$(Build.SourcesDirectory)"
+    if [[ "$(isWin)" == "true" ]]; then
+      working=`cygpath --unix "$(wd)"`
+      sd=`cygpath --unix "$sd"`
+    fi
+    echo "$working"
+    dirname "$working" | xargs mkdir -p
+    cd ..
+    cp -R "$sd" "$working"
+  displayName: setup working dir, copying across checkout to gopath
+- bash: |
+    set -x
+    # get correct path on windows
+    working="$(wd)"
+    if [[ "$(isWin)" == "true" ]]; then
+      working=`cygpath --unix "$(wd)"`
+    fi
+    echo "$working" | xargs dirname | xargs ls -l
+    ls -l "$working"
+    [[ -d "$working" ]] # extra careful
+  displayName: verify working directory is present
+- task: GoTool@0
+  inputs:
+    version: '1.12'
+    workingDirectory: $(wd)
 - bash: ./script/build
-  workingDirectory: $(modulePath)
-  displayName: "Build"
-- bash: ./bin/migrate-actions --help
-  workingDirectory: $(modulePath)
-  displayName: "Run"
+  displayName: Build
+  workingDirectory: $(wd)
+- bash: ls -l "$(wd)"
+  displayName: See what is built
+- task: Go@0
+  displayName: Test
+  inputs:
+    command: test
+    arguments: "./..."
+    workingDirectory: $(wd)
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.4'
+    addToPath: true
+- bash: ruby ./script/functional-test.rb
+  workingDirectory: $(wd)
+  displayName: "Functional test of binary"
