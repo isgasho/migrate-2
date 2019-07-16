@@ -29,7 +29,7 @@ steps:
   displayName: Check format
   continueOnError: true
   workingDirectory: $(wd)
-  condition: ne(variables[os], 'vs2017-win2016')
+  condition: ne(variables['os'], 'vs2017-win2016')
 - bash: ./script/build
   displayName: Build
   workingDirectory: $(wd)
