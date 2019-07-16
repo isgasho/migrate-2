@@ -48,7 +48,7 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo $GITHUB_SHA
+      entrypoint: sh -c echo ${{ github.sha }}
 ), push
   end
 
@@ -65,7 +65,7 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo $GITHUB_SHA
+      entrypoint: sh -c echo ${{ github.sha }}
 ), schedule
   end
 end
