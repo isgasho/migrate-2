@@ -256,6 +256,34 @@ func TestRuns(t *testing.T) {
 
 action "action one" {
   uses = "docker://alpine"
+  runs = ["sh", "-c", "echo hi there"] 
+}`,
+		output: map[string]string{
+			".github/workflows/push.yml": `on: push
+name: workflow one
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo hi there
+`,
+		},
+	})
+}
+
+func TestGithubEnvironmentVariables(t *testing.T) {
+	assertCorrect(t, eg{
+		input: `workflow "workflow one" {
+  on = "push"
+  resolves = [
+    "action one",
+  ]
+}
+
+action "action one" {
+  uses = "docker://alpine"
   runs = ["sh", "-c", "echo $GITHUB_SHA"] 
 }`,
 		output: map[string]string{
@@ -267,7 +295,7 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo $GITHUB_SHA
+      entrypoint: sh -c echo ${{ github.sha }}
 `,
 		},
 	})
