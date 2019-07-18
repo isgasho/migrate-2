@@ -2,6 +2,7 @@
 require 'fileutils'
 require 'minitest/autorun'
 
+bin=ARGV[0]
 
 describe "functional test" do
   before do
@@ -28,7 +29,7 @@ action "action one" {
 }
 ))
 
-    `./bin/migrate-actions`
+    `./bin/#{bin}`
   end
 
 

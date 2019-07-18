@@ -6,42 +6,82 @@ variables:
   wd: $(Pipeline.Workspace)/$(rp)
   GOPATH: $(Pipeline.Workspace)/go
 
-strategy:
-  matrix:
-    windows:
-      os: vs2017-win2016
-    linux:
-      os: 'ubuntu-16.04'
-    osx:
-      os: macOS-10.13
 
-pool:
-  vmImage: $(os)
-
-steps:
-- checkout: self
-  path: $(rp)
-- task: GoTool@0
-  inputs:
-    version: '1.12'
-    workingDirectory: $(wd)
-- bash: ./script/check-format
-  displayName: Check format
-  continueOnError: true
-  workingDirectory: $(wd)
-  condition: ne(variables['os'], 'vs2017-win2016')
-- bash: ./script/build
+jobs:
+- job: perOS
   displayName: Build
-  workingDirectory: $(wd)
-- bash: ls -l "$(wd)/bin"
-  displayName: See what is built
-- bash: ./script/test
-  displayName: Test
-  workingDirectory: $(wd)
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.4'
-    addToPath: true
-- bash: ruby ./script/functional-test.rb
-  workingDirectory: $(wd)
-  displayName: "Functional test of binary"
+  strategy:
+    matrix:
+      windows:
+        os: vs2017-win2016
+        osname: windows
+        bin: migrate-actions.exe
+      linux:
+        os: 'ubuntu-16.04'
+        osname: linux
+        bin: migrate-actions-linux
+      osx:
+        os: macOS-10.13
+        osname: osx
+        bin: migrate-actions-osx
+  pool:
+    vmImage: $(os)
+  steps:
+  - checkout: self
+    path: $(rp)
+  - task: GoTool@0
+    inputs:
+      version: '1.12'
+      workingDirectory: $(wd)
+  - bash: ./script/check-format
+    displayName: Check format
+    continueOnError: true
+    workingDirectory: $(wd)
+    condition: ne(variables['os'], 'vs2017-win2016')
+  - bash: ./script/build $(bin)
+    displayName: Build
+    workingDirectory: $(wd)
+  - bash: ./script/test
+    displayName: Test
+    workingDirectory: $(wd)
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: '>= 2.4'
+      addToPath: true
+  - bash: ruby ./script/functional-test.rb $(bin)
+    workingDirectory: $(wd)
+    displayName: "Functional test of binary"
+  - task: PublishBuildArtifacts@1
+    condition: eq(variables['Build.SourceBranchName'], 'master')
+    inputs:
+      pathtoPublish: '$(wd)/bin'
+      artifactName: $(osname)
+- job: release
+  dependsOn: perOS
+  condition: eq(variables['Build.SourceBranchName'], 'master')
+  steps:
+  - checkout: none
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: linux
+      downloadPath: '$(Build.ArtifactStagingDirectory)/linux'
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: osx
+      downloadPath: '$(Build.ArtifactStagingDirectory)/osx'
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: windows
+      downloadPath: '$(Build.ArtifactStagingDirectory)/windows'
+  - task: GitHubRelease@0
+    inputs:
+      gitHubConnection: migrate
+      action: create
+      repositoryName: '$(Build.Repository.Name)'
+      assets: "$(Build.ArtifactStagingDirectory)/**/*"
