@@ -79,6 +79,7 @@ jobs:
       downloadType: 'single'
       artifactName: windows
       downloadPath: '$(Build.ArtifactStagingDirectory)/windows'
+  - bash: find $(Build.ArtifactStagingDirectory) -type -f | while read f; do chmod +x "$f"; done
   - task: GitHubRelease@0
     inputs:
       gitHubConnection: migrate
