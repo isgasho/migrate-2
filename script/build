@@ -1,2 +1,3 @@
 #!/bin/bash
-go build -o bin/migrate-actions ./cmd/migrate-actions
+bin=${1:-migrate-actions}
+go build -o bin/$bin ./cmd/migrate-actions
