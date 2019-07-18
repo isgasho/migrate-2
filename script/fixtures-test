@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -u
+
+find fixtures -type f -name '*.yml' -exec rm {} \;
+
+for dir in fixtures/*; do
+    cd $dir
+    ../../bin/migrate-actions
+    cd -
+done
+
+changes=""
+while read f; do
+    diff=$(git diff HEAD -- "$f")
+    if [[ "$diff" != "" ]]; then
+        changes=$(printf "%s\n%s" "$changes" "$diff")
+    fi
+done < <(find fixtures -type f -name '*.yml')
+
+if [[ "$changes" != "" ]]; then
+    echo FAILED - output not as expected, differences:
+    echo "$changes"
+    exit 1
+fi
+
+echo "PASSED"

@@ -1,0 +1,9 @@
+on: push
+name: on push
+jobs:
+  sayHi:
+    name: say hi
+    steps:
+    - name: say hi
+      uses: docker/whalesay@master
+      entrypoint: whalesay hello actions

@@ -1,0 +1,15 @@
+on: push
+name: Main workflow
+jobs:
+  nPMInstall:
+    name: NPM install
+    steps:
+    - name: NPM install
+      uses: actions/npm@master
+      args: install
+    - name: NPM build
+      uses: actions/npm@master
+      args: run build
+    - name: NPM lint
+      uses: actions/npm@master
+      args: run lint
