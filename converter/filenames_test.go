@@ -44,6 +44,13 @@ func Test_newFilenames(t *testing.T) {
 		},
 		{
 			wf: model.Workflow{
+				Identifier: "Develop Test, Build And Deploy",
+				On:         &model.OnEvent{Event: "push"},
+			},
+			output: "push-develop-test-build-and-deploy.yml",
+		},
+		{
+			wf: model.Workflow{
 				Identifier: "unique event",
 				On:         &model.OnEvent{Event: "issues"},
 			},
