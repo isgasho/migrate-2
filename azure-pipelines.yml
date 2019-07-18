@@ -52,6 +52,7 @@ jobs:
     workingDirectory: $(wd)
     displayName: "Functional test of binary"
   - task: PublishBuildArtifacts@1
+    condition: eq(variables['Build.SourceBranchName'], 'master')
     inputs:
       pathtoPublish: '$(wd)/bin'
       artifactName: $(osname)
