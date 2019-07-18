@@ -1,0 +1,11 @@
+on:
+  schedules:
+  - cron: '* * * * *'
+name: per minute
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo ${{ github.sha }}

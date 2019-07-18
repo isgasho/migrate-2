@@ -1,0 +1,9 @@
+on: push
+name: workflow one
+jobs:
+  actionOne:
+    name: action one
+    steps:
+    - name: action one
+      uses: docker://alpine
+      entrypoint: sh -c echo ${{ github.sha }}

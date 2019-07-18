@@ -1,0 +1,10 @@
+on: push
+name: Send Message On Push
+jobs:
+  new-task:
+    steps:
+    - name: new-task
+      uses: docker://alpine
+      args: cat /github/workflow/event.json
+    - name: run
+      uses: ./.github/actions/irc/
