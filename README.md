@@ -28,7 +28,7 @@ action "say hi" {
     uses = "docker/whalesay@master"
     runs = "whalesay hello actions"
 }
-> path/to/migrate
+> path/where/downloaded/migrate-actions
 Created workflow .github/workflows/push.yml
 Created workflow .github/workflows/pull_request.yml
 > tail -n +1 .github/workflows/*.yml
