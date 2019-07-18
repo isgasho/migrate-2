@@ -57,6 +57,7 @@ jobs:
       artifactName: $(osname)
 - job: release
   dependsOn: perOS
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   steps:
   - checkout: none
   - task: DownloadBuildArtifacts@0
@@ -78,7 +79,6 @@ jobs:
       artifactName: windows
       downloadPath: '$(Build.ArtifactStagingDirectory)/windows'
   - task: GitHubRelease@0
-    condition: eq(variables['Build.SourceBranchName'], 'master')
     inputs:
       gitHubConnection: migrate
       action: create
