@@ -1,6 +1,6 @@
 #!/bin/bash
 listFile=/tmp/unformatted.txt
-gofmt -l *.go cli/*.go >$listFile
+go fmt ./... >$listFile
 
 if [[ -s $listFile ]]; then
   echo "Formatting of files incorrect:"

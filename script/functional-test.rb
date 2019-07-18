@@ -34,7 +34,7 @@ action "action one" {
 
   it "outputs expected files" do
     actual = Dir[".github/workflows/*.yml"]
-    assert_equal actual, [".github/workflows/schedule.yml", ".github/workflows/push.yml"]
+    assert_equal actual.sort, [".github/workflows/schedule.yml", ".github/workflows/push.yml"].sort
   end
 
   it "handles push correctly" do
@@ -48,7 +48,7 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo $GITHUB_SHA
+      entrypoint: sh -c echo ${{ github.sha }}
 ), push
   end
 
@@ -65,7 +65,7 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo $GITHUB_SHA
+      entrypoint: sh -c echo ${{ github.sha }}
 ), schedule
   end
 end

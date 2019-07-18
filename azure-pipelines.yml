@@ -1,42 +1,47 @@
 trigger:
 - "*"
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
-  GOBIN:  '$(GOPATH)/bin'
-  GOROOT: '/usr/local/go1.11'
-  GOPATH: '$(system.defaultWorkingDirectory)/gopath'
-  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)'
-  outputPath: ./bin/migrate-actions
+  rp: go/src/github.com/actions/migrate
+  wd: $(Pipeline.Workspace)/$(rp)
+  GOPATH: $(Pipeline.Workspace)/go
+
+strategy:
+  matrix:
+    windows:
+      os: vs2017-win2016
+    linux:
+      os: 'ubuntu-16.04'
+    osx:
+      os: macOS-10.13
+
+pool:
+  vmImage: $(os)
 
 steps:
-- bash: |
-    mkdir -p '$(GOBIN)'
-    mkdir -p '$(GOPATH)/pkg'
-    mkdir -p '$(modulePath)'
-    shopt -s extglob
-    mv !(gopath) '$(modulePath)'
-    echo '##vso[task.prependpath]$(GOBIN)'
-    echo '##vso[task.prependpath]$(GOROOT)/bin'
-  displayName: 'Set up the Go workspace'
+- checkout: self
+  path: $(rp)
+- task: GoTool@0
+  inputs:
+    version: '1.12'
+    workingDirectory: $(wd)
 - bash: ./script/check-format
-  displayName: "Check format"
-  workingDirectory: $(modulePath)
-- bash: ./script/test
-  workingDirectory: $(modulePath)
-  displayName: "Test"
+  displayName: Check format
+  continueOnError: true
+  workingDirectory: $(wd)
+  condition: ne(variables['os'], 'vs2017-win2016')
 - bash: ./script/build
-  workingDirectory: $(modulePath)
-  displayName: "Build"
-- bash: ./bin/migrate-actions --help
-  workingDirectory: $(modulePath)
-  displayName: "Check binary is runnable"
+  displayName: Build
+  workingDirectory: $(wd)
+- bash: ls -l "$(wd)/bin"
+  displayName: See what is built
+- bash: ./script/test
+  displayName: Test
+  workingDirectory: $(wd)
 - task: UseRubyVersion@0
   inputs:
     versionSpec: '>= 2.4'
     addToPath: true
 - bash: ruby ./script/functional-test.rb
-  workingDirectory: $(modulePath)
+  workingDirectory: $(wd)
   displayName: "Functional test of binary"

@@ -67,10 +67,10 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 				Env:  a.Env,
 			}
 			if a.Runs != nil {
-				ca.Entrypoint = strings.Join(a.Runs.Split(), " ")
+				ca.Entrypoint = convertCommandExpressions(a.Runs.Split())
 			}
 			if a.Args != nil {
-				ca.Args = strings.Join(a.Args.Split(), " ")
+				ca.Args = convertCommandExpressions(a.Args.Split())
 			}
 			j.Actions = append(j.Actions, ca)
 		}
@@ -84,6 +84,33 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 
 	return &converted, nil
 }
+
+func convertCommandExpressions(ss []string) string {
+	out := make([]string, 0, len(ss))
+	for _, s := range ss {
+		out = append(out, convertGithubEnvironmentReferences(s))
+	}
+	return strings.Join(out, " ")
+}
+
+var replacements = []string{
+	"$GITHUB_WORKFLOW", "${{ github.workflow }}",
+	"$GITHUB_ACTION", "${{ github.action }}",
+	"$GITHUB_ACTOR", "${{ github.actor }}",
+	"$GITHUB_REPOSITORY", "${{ github.repository }}",
+	"$GITHUB_EVENT_NAME", "${{ github.event_name }}",
+	"$GITHUB_EVENT_PATH", "${{ github.event_path }}",
+	"$GITHUB_WORKSPACE", "${{ github.workspace }}",
+	"$GITHUB_SHA", "${{ github.sha }}",
+	"$GITHUB_REF", "${{ github.ref }}",
+	"$GITHUB_TOKEN", "${{ github.token }}",
+}
+var envVarReplacements = strings.NewReplacer(replacements...)
+
+func convertGithubEnvironmentReferences(s string) string {
+	return envVarReplacements.Replace(s)
+}
+
 func writeOn(w *workflow, on model.On) {
 	if o, ok := on.(*model.OnSchedule); ok {
 		w.OnSchedule = map[string][]map[string]string{
