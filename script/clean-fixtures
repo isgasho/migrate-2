@@ -1,0 +1,2 @@
+#!/bin/bash
+find fixtures -type f -name '*.yml' -exec rm {} \;
