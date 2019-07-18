@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 
 	"github.com/actions/migrate/converter"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ var rootCmd = &cobra.Command{
 
 		f, err := os.Open(workflowFile)
 		if err != nil {
-			userError(fmt.Sprintf("No `%s' file to convert", workflowFilePath))
+			userError(fmt.Sprintf("No `%s' file to convert", filepath.FromSlash(workflowFilePath)))
 			return
 		}
 
@@ -61,14 +62,14 @@ var rootCmd = &cobra.Command{
 
 		for _, file := range files {
 			writeFile(file)
-			fmt.Printf("Created workflow %s\n", file.Path)
+			fmt.Printf("Created workflow %s\n", filepath.FromSlash(file.Path))
 		}
 
 		fmt.Println("")
 		fmt.Println("You can now delete your main.workflow file. If you have any .yml files in .github/workflows your main.workflow will be ignored.")
-		fmt.Println("    rm .github/main.workflow")
-		fmt.Println("    git add -A .github/main.workflow .github/workflows/*.yml")
-		fmt.Println("    git commit -m 'converted main.workflow to Actions V2 yml files'")
+		fmt.Printf("    rm %s", filepath.FromSlash(".github/main.workflow"))
+		fmt.Printf("    git add -A %s %s", filepath.FromSlash(".github/main.workflow"), filepath.FromSlash(".github/workflows/*.yml"))
+		fmt.Printf("    git commit -m 'converted main.workflow to Actions V2 yml files'")
 		fmt.Println("")
 
 		fmt.Println("Thanks for being a")
