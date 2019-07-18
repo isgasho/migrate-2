@@ -67,9 +67,9 @@ var rootCmd = &cobra.Command{
 
 		fmt.Println("")
 		fmt.Println("You can now delete your main.workflow file. If you have any .yml files in .github/workflows your main.workflow will be ignored.")
-		fmt.Printf("    rm %s", filepath.FromSlash(".github/main.workflow"))
-		fmt.Printf("    git add -A %s %s", filepath.FromSlash(".github/main.workflow"), filepath.FromSlash(".github/workflows/*.yml"))
-		fmt.Printf("    git commit -m 'converted main.workflow to Actions V2 yml files'")
+		fmt.Printf("    rm %s\n", filepath.FromSlash(".github/main.workflow"))
+		fmt.Printf("    git add -A %s %s\n", filepath.FromSlash(".github/main.workflow"), filepath.FromSlash(".github/workflows/*.yml"))
+		fmt.Printf("    git commit -m 'converted main.workflow to Actions V2 yml files'\n")
 		fmt.Println("")
 
 		fmt.Println("Thanks for being a")
