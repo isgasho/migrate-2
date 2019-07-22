@@ -33,6 +33,7 @@ name: workflow one
 jobs:
   actionOne:
     name: action one
+    runs-on: ubuntu-latest
     steps:
     - name: action one
       uses: docker://alpine
@@ -81,6 +82,7 @@ action "F" {
 name: fan in out
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -126,6 +128,7 @@ action "A" {
 name: scheduled
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -136,6 +139,7 @@ jobs:
 name: scheduled two
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -177,6 +181,7 @@ action "A" {
 name: one
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -185,6 +190,7 @@ jobs:
 name: B
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -193,6 +199,7 @@ jobs:
 name: C
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -234,6 +241,7 @@ action "A" {
 name: one
 jobs:
   A:
+    runs-on: ubuntu-latest
     steps:
     - name: A
       uses: ./A
@@ -264,6 +272,7 @@ name: workflow one
 jobs:
   actionOne:
     name: action one
+    runs-on: ubuntu-latest
     steps:
     - name: action one
       uses: docker://alpine
@@ -292,6 +301,7 @@ name: workflow one
 jobs:
   actionOne:
     name: action one
+    runs-on: ubuntu-latest
     steps:
     - name: action one
       uses: docker://alpine

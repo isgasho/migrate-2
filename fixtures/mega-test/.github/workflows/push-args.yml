@@ -1,0 +1,13 @@
+on: push
+name: args
+jobs:
+  stringArgs:
+    name: string args
+    runs-on: ubuntu-latest
+    actions:
+    - name: string args
+      uses: docker://alpine
+      args: echo hi
+    - name: array args
+      uses: docker://alpine
+      args: echo hi

@@ -40,10 +40,9 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 	fn := newFilenames(configuration.Workflows)
 
 	for i, wf := range configuration.Workflows {
-		// TODO schedules
 		w := workflow{
-			Name: wf.Identifier,
-			Jobs: make(map[string]job, 0),
+			Name:   wf.Identifier,
+			Jobs:   make(map[string]job, 0),
 		}
 		writeOn(&w, wf.On)
 		// Make a job per resolve target
@@ -52,7 +51,9 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 			return nil, err
 		}
 
-		j := job{}
+		j := job{
+			RunsOn: "ubuntu-latest",
+		}
 		resolved := acts[0]
 		id := toID(resolved.Identifier)
 		if id != resolved.Identifier {

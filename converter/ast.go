@@ -12,6 +12,7 @@ type action struct {
 type job struct {
 	Name    string    `yaml:",omitempty"`
 	Actions []*action `yaml:"steps"`
+	RunsOn     string `yaml:"runs-on"`
 }
 
 type workflow struct {

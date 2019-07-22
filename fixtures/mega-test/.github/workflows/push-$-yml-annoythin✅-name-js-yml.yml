@@ -1,0 +1,8 @@
+on: push
+name: '   $.yml annoYthin✅ name.js.yml'
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    actions:
+    - name: one
+      uses: docker://alpine
