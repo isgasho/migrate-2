@@ -85,3 +85,14 @@ action "Create an issue" {
   secrets = ["GITHUB_TOKEN"]
   args = ".github/ISSUE_TEMPLATE/TOP5.md"
 }
+
+workflow "   nonense stress test :key value {k:1,}" {
+  on = "push"
+  resolves = [
+    "emoji actions 🙈 yay    ' : "
+  ]
+}
+
+action "emoji actions 🙈 yay    ' : " {
+  uses = "docker://alpine"
+}
