@@ -41,8 +41,8 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 
 	for i, wf := range configuration.Workflows {
 		w := workflow{
-			Name:   wf.Identifier,
-			Jobs:   make(map[string]job, 0),
+			Name: wf.Identifier,
+			Jobs: make(map[string]job, 0),
 		}
 		writeOn(&w, wf.On)
 		// Make a job per resolve target
