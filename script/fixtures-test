@@ -3,10 +3,13 @@
 set -u
 
 find fixtures -type f -name '*.yml' -exec rm {} \;
+basedir=$(pwd)
 
 for dir in fixtures/*; do
     cd $dir
-    ../../bin/migrate-actions
+    set -e
+    $basedir/bin/migrate-actions >/dev/null
+    set +e
     cd -
 done
 
