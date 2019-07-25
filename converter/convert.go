@@ -67,11 +67,14 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 				Name: a.Identifier,
 				Env:  a.Env,
 			}
-			if a.Runs != nil {
-				ca.Entrypoint = convertCommandExpressions(a.Runs.Split())
-			}
-			if a.Args != nil {
-				ca.Args = convertCommandExpressions(a.Args.Split())
+			if a.Runs != nil || a.Args != nil {
+				ca.With = with{}
+				if a.Runs != nil {
+					ca.With.Entrypoint = convertCommandExpressions(a.Runs.Split())
+				}
+				if a.Args != nil {
+					ca.With.Args = convertCommandExpressions(a.Args.Split())
+				}
 			}
 			j.Actions = append(j.Actions, ca)
 		}
@@ -185,6 +188,8 @@ func (converted *parsed) Files() ([]OutputFile, error) {
 		}
 
 		y := string(j)
+		// YAML will escape `on` by default due to the boolean on, YAML 1.2 has safe `on` parsing
+		// and we want to keep it clean
 		y = strings.Replace(y, "__workflowKeyOn__", "on", 1)
 		y = strings.Replace(y, "__workflowKeyOnSchedule__", "on", 1)
 

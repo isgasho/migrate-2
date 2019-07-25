@@ -37,7 +37,8 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      args: echo hi
+      with:
+        args: echo hi
 `,
 		},
 	})
@@ -276,13 +277,14 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo hi there
+      with:
+        entrypoint: sh -c echo hi there
 `,
 		},
 	})
 }
 
-func TestGithubEnvironmentVariables(t *testing.T) {
+func TestGithubEnvironmentVariableRewriting(t *testing.T) {
 	assertCorrect(t, eg{
 		input: `workflow "workflow one" {
   on = "push"
@@ -305,7 +307,8 @@ jobs:
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo ${{ github.sha }}
+      with:
+        entrypoint: sh -c echo ${{ github.sha }}
 `,
 		},
 	})

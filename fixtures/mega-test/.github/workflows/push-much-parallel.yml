@@ -3,7 +3,7 @@ name: much parallel
 jobs:
   A:
     runs-on: ubuntu-latest
-    actions:
+    steps:
     - name: A
       uses: docker://alpine
     - name: C

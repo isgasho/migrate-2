@@ -4,6 +4,6 @@ jobs:
   !!binary ZW1vamlBY3Rpb25zw5CfmYhZYXknOg==:
     name: "emoji actions \U0001F648 yay    ' : "
     runs-on: ubuntu-latest
-    actions:
+    steps:
     - name: "emoji actions \U0001F648 yay    ' : "
       uses: docker://alpine

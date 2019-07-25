@@ -4,10 +4,12 @@ jobs:
   stringArgs:
     name: string args
     runs-on: ubuntu-latest
-    actions:
+    steps:
     - name: string args
       uses: docker://alpine
-      args: echo hi
+      with:
+        args: echo hi
     - name: array args
       uses: docker://alpine
-      args: echo hi
+      with:
+        args: echo hi

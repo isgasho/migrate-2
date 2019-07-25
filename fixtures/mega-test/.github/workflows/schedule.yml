@@ -6,7 +6,8 @@ jobs:
   createAnIssue:
     name: Create an issue
     runs-on: ubuntu-latest
-    actions:
+    steps:
     - name: Create an issue
       uses: bdougie/create-an-issue@22c7dda012351b778b392d257999fb782cb44041
-      args: .github/ISSUE_TEMPLATE/TOP5.md
+      with:
+        args: .github/ISSUE_TEMPLATE/TOP5.md

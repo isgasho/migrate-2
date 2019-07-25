@@ -5,7 +5,9 @@ name: per minute
 jobs:
   actionOne:
     name: action one
+    runs-on: ubuntu-latest
     steps:
     - name: action one
       uses: docker://alpine
-      entrypoint: sh -c echo ${{ github.sha }}
+      with:
+        entrypoint: sh -c echo ${{ github.sha }}

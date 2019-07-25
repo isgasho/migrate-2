@@ -1,17 +1,21 @@
 package converter
 
+type with struct {
+	Args       string `yaml:",omitempty"`
+	Entrypoint string `yaml:",omitempty"`
+}
+
 type action struct {
-	Name       string `yaml:",omitempty"`
-	Uses       string
-	Args       string            `yaml:",omitempty"`
-	Env        map[string]string `yaml:",omitempty"`
-	Entrypoint string            `yaml:",omitempty"`
+	Name string `yaml:",omitempty"`
+	Uses string
+	Env  map[string]string `yaml:",omitempty"`
+	With with              `yaml:",omitempty"`
 }
 
 // converted over from a workflow
 type job struct {
 	Name    string    `yaml:",omitempty"`
-	RunsOn     string `yaml:"runs-on"`
+	RunsOn  string    `yaml:"runs-on"`
 	Actions []*action `yaml:"steps"`
 }
 
