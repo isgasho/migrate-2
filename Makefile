@@ -1,6 +1,9 @@
 bin/migrate-actions: $(go_src)
 	script/build
 
-test: bin/migrate-actions
-	go test -v ./... && script/fixtures-test
+unit:
+	go test -v ./...
+
+test: unit bin/migrate-actions
+	script/fixtures-test
 
