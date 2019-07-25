@@ -11,8 +11,8 @@ type action struct {
 // converted over from a workflow
 type job struct {
 	Name    string    `yaml:",omitempty"`
-	Actions []*action `yaml:"steps"`
 	RunsOn     string `yaml:"runs-on"`
+	Actions []*action `yaml:"steps"`
 }
 
 type workflow struct {
