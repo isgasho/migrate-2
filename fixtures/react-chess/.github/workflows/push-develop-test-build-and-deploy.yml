@@ -3,28 +3,37 @@ name: Develop Test, Build And Deploy
 jobs:
   installDependencies:
     name: Install Dependencies
+    runs-on: ubuntu-latest
     steps:
     - name: Install Dependencies
       uses: actions/npm@master
-      args: install
+      with:
+        args: install
     - name: Login Heroku
       uses: actions/heroku@master
-      args: container:login
+      with:
+        args: container:login
     - name: Filter Develop
       uses: actions/bin/filter@master
-      args: branch develop
+      with:
+        args: branch develop
     - name: Lint Code
       uses: actions/npm@master
-      args: run lint
+      with:
+        args: run lint
     - name: Push Heroku Develop
       uses: actions/heroku@master
-      args: container:push -a react-chessgame-dev web
+      with:
+        args: container:push -a react-chessgame-dev web
     - name: Build Project
       uses: actions/npm@master
-      args: run build
+      with:
+        args: run build
     - name: Release Heroku Develop
       uses: actions/heroku@master
-      args: container:release -a react-chessgame-dev web
+      with:
+        args: container:release -a react-chessgame-dev web
     - name: Docker Build
       uses: actions/docker/cli@master
-      args: build -t roryclaasen/reactchess .
+      with:
+        args: build -t roryclaasen/reactchess .

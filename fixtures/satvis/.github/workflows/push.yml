@@ -3,13 +3,17 @@ name: Main workflow
 jobs:
   nPMInstall:
     name: NPM install
+    runs-on: ubuntu-latest
     steps:
     - name: NPM install
       uses: actions/npm@master
-      args: install
+      with:
+        args: install
     - name: NPM build
       uses: actions/npm@master
-      args: run build
+      with:
+        args: run build
     - name: NPM lint
       uses: actions/npm@master
-      args: run lint
+      with:
+        args: run lint

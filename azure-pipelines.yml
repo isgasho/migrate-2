@@ -48,7 +48,7 @@ jobs:
     inputs:
       versionSpec: '>= 2.4'
       addToPath: true
-  - bash: ruby ./script/functional-test.rb $(bin)
+  - bash: bash ./script/fixtures-test $(bin)
     workingDirectory: $(wd)
     displayName: "Functional test of binary"
   - task: PublishBuildArtifacts@1

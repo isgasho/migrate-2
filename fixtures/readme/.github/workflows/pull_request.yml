@@ -3,7 +3,9 @@ name: on pull request
 jobs:
   sayHi:
     name: say hi
+    runs-on: ubuntu-latest
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: whalesay hello actions
+      with:
+        entrypoint: whalesay hello actions

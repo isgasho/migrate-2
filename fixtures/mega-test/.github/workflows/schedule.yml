@@ -1,0 +1,13 @@
+on:
+  schedules:
+  - cron: 00 08 * * 1
+name: Top 5
+jobs:
+  createAnIssue:
+    name: Create an issue
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create an issue
+      uses: bdougie/create-an-issue@22c7dda012351b778b392d257999fb782cb44041
+      with:
+        args: .github/ISSUE_TEMPLATE/TOP5.md

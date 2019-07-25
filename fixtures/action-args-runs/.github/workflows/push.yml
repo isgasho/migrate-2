@@ -1,0 +1,25 @@
+on: push
+name: args and runs
+jobs:
+  argsRunsArray:
+    name: args runs array
+    runs-on: ubuntu-latest
+    steps:
+    - name: args runs array
+      uses: docker://alpine
+      with:
+        args: echo hi
+        entrypoint: some thing
+    - name: args array
+      uses: docker://alpine
+      with:
+        args: echo hi
+    - name: args runs
+      uses: docker://alpine
+      with:
+        args: echo hi
+        entrypoint: some thing
+    - name: args
+      uses: docker://alpine
+      with:
+        args: echo hi

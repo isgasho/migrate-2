@@ -1,0 +1,9 @@
+on: push
+name: '   nonense stress test :key value {k:1,}'
+jobs:
+  !!binary ZW1vamlBY3Rpb25zw5CfmYhZYXknOg==:
+    name: "emoji actions \U0001F648 yay    ' : "
+    runs-on: ubuntu-latest
+    steps:
+    - name: "emoji actions \U0001F648 yay    ' : "
+      uses: docker://alpine

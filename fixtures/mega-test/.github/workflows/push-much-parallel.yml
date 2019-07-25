@@ -1,0 +1,18 @@
+on: push
+name: much parallel
+jobs:
+  A:
+    runs-on: ubuntu-latest
+    steps:
+    - name: A
+      uses: docker://alpine
+    - name: C
+      uses: docker://alpine
+    - name: B
+      uses: docker://alpine
+    - name: D
+      uses: docker://alpine
+    - name: F
+      uses: docker://alpine
+    - name: E
+      uses: docker://alpine
