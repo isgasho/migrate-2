@@ -1,11 +1,43 @@
 # convert-workflows tool
 
-This tool will generate a set of GitHub Actions YAML workflow files from your `.workflow` files.
+Converts GitHub Actions `main.workflow` files into the new `.yml` syntax.
 
 ## Conversion notes
 
-The original beta version of Actions supported parallel Action execution while sharing a workspace. In V2, we do support parallel execution
-of jobs, but jobs do not share workspaces.
+The original beta version of Actions supported parallel Action execution while sharing a workspace. In V2, we do support parallel execution of jobs, but jobs do not share workspaces.
+
+This means parallel workflows will be linearized:
+
+```
+      ┌───────┐             ┌───────┐
+      │   A   │             │   A   │
+      └───────┘             └───────┘
+          │                     │    
+    ┌─────┴─────┐               ▼    
+    │           │           ┌───────┐
+    ▼           ▼           │   C   │
+┌───────┐   ┌───────┐       └───────┘
+│   B   │   │   C   │           │    
+└───────┘   └───────┘           ▼    
+    │           │           ┌───────┐
+    └─────┬─────┘           │   B   │
+          ▼                 └───────┘
+      ┌───────┐                 │    
+      │   D   │                 ▼    
+      └───────┘             ┌───────┐
+          │                 │   D   │
+    ┌─────┴─────┐           └───────┘
+    │           │               │    
+    ▼           ▼               ▼    
+┌───────┐   ┌───────┐       ┌───────┐
+│   E   │   │   F   │       │   F   │
+└───────┘   └───────┘       └───────┘
+                                │    
+                                ▼    
+                            ┌───────┐
+                            │   E   │
+                            └───────┘
+```
 
 ## Install
 
