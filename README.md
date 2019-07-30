@@ -88,3 +88,9 @@ jobs:
 ```
 
 You can then delete your `main.workflow`. If you have any `.yml` files in `.github/workflows` your `main.workflow` will be ignored.
+
+## Releasing
+
+- Make your change following the [contribution guide](CONTRIBUTING.md)
+- Once you've merged your PR to master run `./script/release` locally, and CI will create a new release with the binaries
+
