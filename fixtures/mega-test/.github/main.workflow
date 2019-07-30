@@ -96,3 +96,7 @@ workflow "   nonense stress test :key value {k:1,}" {
 action "emoji actions 🙈 yay    ' : " {
   uses = "docker://alpine"
 }
+
+workflow "no resolves" {
+	on = "push"
+}
