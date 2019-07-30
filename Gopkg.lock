@@ -22,26 +22,6 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:145315cb7abf2c93fe31416f5c477096a560d86cd9491370ec09d490cd5a7523"
-  name = "github.com/github/go"
-  packages = ["errors"]
-  pruneopts = "UT"
-  revision = "aa3331bda06b5a87c34bf06ea851e43d2da6e853"
-  version = "v1.1.2"
-
-[[projects]]
-  digest = "1:69dea663bb54919e053b484677e0a2b4f21c8ea4aa6aef076e3a7f3308e30e36"
-  name = "github.com/github/mu"
-  packages = [
-    "ctxkey",
-    "errs",
-    "kvp",
-  ]
-  pruneopts = "UT"
-  revision = "212cfbeef2e9eb7049d3bf53dd8ebdbba34316a2"
-  version = "v1.18.0"
-
-[[projects]]
   digest = "1:7d1d1acf71d2b370c82a6336f4ad7c231a062dbdd8951e7270dd6f1740597b80"
   name = "github.com/hashicorp/hcl"
   packages = [
@@ -140,7 +120,7 @@
   input-imports = [
     "github.com/actions/workflow-parser/model",
     "github.com/actions/workflow-parser/parser",
-    "github.com/github/mu/errs",
+    "github.com/pkg/errors",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",

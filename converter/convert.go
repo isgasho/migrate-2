@@ -2,12 +2,12 @@ package converter
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"strings"
 
 	"github.com/actions/workflow-parser/model"
 	"github.com/actions/workflow-parser/parser"
-	"github.com/github/mu/errs"
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,7 +17,7 @@ const workflowDirectory = ".github/workflows"
 func Parse(v1Workflow io.Reader) (*parsed, error) {
 	actions, err := parser.Parse(v1Workflow)
 	if err != nil {
-		return nil, errs.Wrap(err, "Invalid workflow file")
+		return nil, errors.Wrap(err, "Invalid workflow file")
 	}
 
 	converted, err := fromConfiguration(actions)
@@ -150,7 +150,7 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 	for _, resolveID := range workflow.Resolves {
 		act, ok := actByID[resolveID]
 		if !ok {
-			return nil, errs.Errorf("Resolves to invalid action `%s'", resolveID)
+			return nil, errors.Errorf("Resolves to invalid action `%s'", resolveID)
 		}
 		queue = append(queue, act)
 	}
@@ -167,7 +167,7 @@ func serializeWorkflow(workflow *model.Workflow, actByID map[string]*model.Actio
 		for _, needed := range current.Needs {
 			act, ok := actByID[needed]
 			if !ok {
-				return nil, errs.Errorf("Resolves to invalid action `%s'", needed)
+				return nil, errors.Errorf("Resolves to invalid action `%s'", needed)
 			}
 			queue = append(queue, act)
 		}
