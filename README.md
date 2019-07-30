@@ -1,6 +1,6 @@
 # convert-workflows tool
 
-Converts GitHub Actions `main.workflow` files into the new `.yml` syntax.
+Converts GitHub Actions `main.workflow` files into the new `.yml` syntax. Pre-built binaries are available for Linux, OSX and Windows, and it can be built for any environment that Go supports.
 
 ## Conversion notes
 
@@ -88,6 +88,13 @@ jobs:
 ```
 
 You can then delete your `main.workflow`. If you have any `.yml` files in `.github/workflows` your `main.workflow` will be ignored.
+
+## Build
+
+- Prerequesites: Go 1.12.x, `dep`
+- Clone project
+- Run `./script/bootstrap`
+- Run `./script/build`
 
 ## Releasing
 
