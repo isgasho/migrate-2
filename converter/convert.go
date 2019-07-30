@@ -45,7 +45,7 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 			Jobs: make(map[string]job, 0),
 		}
 		writeOn(&w, wf.On)
-		// Make a job per resolve target
+
 		acts, err := serializeWorkflow(wf, actByID)
 		if err != nil {
 			return nil, err
@@ -54,29 +54,33 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 		j := job{
 			RunsOn: "ubuntu-latest",
 		}
-		resolved := acts[0]
-		id := toID(resolved.Identifier)
-		if id != resolved.Identifier {
-			j.Name = resolved.Identifier
-		}
 
-		j.Actions = make([]*action, 0, len(acts))
-		for _, a := range acts {
-			ca := &action{
-				Uses: a.Uses.String(),
-				Name: a.Identifier,
-				Env:  a.Env,
+		id := "build"
+		if len(acts) > 0 {
+			resolved := acts[0]
+			id = toID(resolved.Identifier)
+			if id != resolved.Identifier {
+				j.Name = resolved.Identifier
 			}
-			if a.Runs != nil || a.Args != nil {
-				ca.With = with{}
-				if a.Runs != nil {
-					ca.With.Entrypoint = convertCommandExpressions(a.Runs.Split())
+
+			j.Actions = make([]*action, 0, len(acts))
+			for _, a := range acts {
+				ca := &action{
+					Uses: a.Uses.String(),
+					Name: a.Identifier,
+					Env:  a.Env,
 				}
-				if a.Args != nil {
-					ca.With.Args = convertCommandExpressions(a.Args.Split())
+				if a.Runs != nil || a.Args != nil {
+					ca.With = with{}
+					if a.Runs != nil {
+						ca.With.Entrypoint = convertCommandExpressions(a.Runs.Split())
+					}
+					if a.Args != nil {
+						ca.With.Args = convertCommandExpressions(a.Args.Split())
+					}
 				}
+				j.Actions = append(j.Actions, ca)
 			}
-			j.Actions = append(j.Actions, ca)
 		}
 		w.Jobs[id] = j
 
