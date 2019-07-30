@@ -45,9 +45,9 @@ Head over to the [releases](https://github.com/actions/migrate/releases) tab, an
 
 Once you've downloaded it, navigate to a repository using Actions V1 and run the `migrate-actions` executable.
 
-```sh
-> cd path/to/your/repo
-> cat ./.github/main.workflow
+Given an existing `.github/main.workflow`:
+
+```hcl
 workflow "on push" {
     on = "push"
     resolves = ["say hi"]
@@ -60,11 +60,19 @@ action "say hi" {
     uses = "docker/whalesay@master"
     runs = "whalesay hello actions"
 }
-> path/where/downloaded/migrate-actions
+```
+
+Running `migrate-actions`:
+
+```
 Created workflow .github/workflows/push.yml
 Created workflow .github/workflows/pull_request.yml
-> tail -n +1 .github/workflows/*.yml
-==> .github/workflows/pull_request.yml <==
+```
+
+This will produce two GitHub Actions V2 YAML configuration files.
+First, it will produce a configuration for pull requests, `.github/workflows/pull_request.yml`:
+
+```yaml
 on: pull_request
 name: on pull request
 jobs:
@@ -74,8 +82,11 @@ jobs:
     - name: say hi
       uses: docker/whalesay@master
       entrypoint: whalesay hello actions
+```
 
-==> .github/workflows/push.yml <==
+Next, it will produce a configuration file for pushes, `.github/workflows/push.yml`:
+
+```yaml
 on: push
 name: on push
 jobs:
