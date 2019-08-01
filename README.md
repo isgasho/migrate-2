@@ -39,6 +39,78 @@ This means parallel workflows will be linearized:
                             └───────┘
 ```
 
+Since `jobs` can be parallel, if there isn't a hard dependency on shared workspaces, you can regain paralleism by duplicating work. For instance, we can make E and F run in parallel by creating two jobs, both linearizing the dependencies leading up to the final action:
+
+<table>
+      <tr>
+            <th>Workflow file</th>
+            <th>Resulting build</th>
+      </tr>
+      <tr> 
+           <td>
+           
+```
+on: push
+jobs:
+  E:
+    runs-on: ubuntu-latest
+    steps:
+    - run: ./A
+    - run: ./B
+    - run: ./C
+    - run: ./D
+    - run: ./E
+  F:
+    runs-on: ubuntu-latest
+    steps:
+    - run: ./A
+    - run: ./B
+    - run: ./C
+    - run: ./D
+    - run: ./F
+```
+
+</td>
+
+<td>
+      
+```
+┌───────┐     ┌───────┐
+│   A   │     │   A   │
+└───────┘     └───────┘
+    │             │    
+    ▼             ▼    
+┌───────┐     ┌───────┐
+│   C   │     │   C   │
+└───────┘     └───────┘
+    │             │    
+    ▼             ▼    
+┌───────┐     ┌───────┐
+│   B   │     │   B   │
+└───────┘     └───────┘
+    │             │    
+    ▼             ▼    
+┌───────┐     ┌───────┐
+│   D   │     │   D   │
+└───────┘     └───────┘
+    │             │    
+    ▼             ▼    
+┌───────┐     ┌───────┐
+│   E   │     │   F   │
+└───────┘     └───────┘
+```
+
+</td>
+
+</tr>
+
+</table>
+
+### Limitations
+
+- Comments are dropped, sorry! 😭
+- Parallel workflows are serialized (see above)
+
 ## Install
 
 Head over to the [releases](https://github.com/actions/migrate/releases) tab, and download the executable for your operating system.
