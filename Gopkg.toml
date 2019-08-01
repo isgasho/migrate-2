@@ -31,10 +31,6 @@
   source = "github.com/github/workflow-parser.git"
 
 [[constraint]]
-  name = "github.com/github/mu"
-  version = "1.18.0"
-
-[[constraint]]
   name = "github.com/stretchr/testify"
   version = "1.3.0"
 
