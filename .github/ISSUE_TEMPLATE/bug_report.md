@@ -3,8 +3,10 @@ name: bug-report
 about: 'Found a bug? Please let us know here'
 title: Short description of bug
 labels: bug
-assignees: @timruffles
+assignees: '@timruffles'
+
 ---
+
 
 - Operating system & version:
 - Shell/terminal output:
