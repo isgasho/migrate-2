@@ -72,7 +72,7 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 				}
 				if a.Runs != nil || a.Args != nil {
 					ca.With = with{}
-					args := make([]string,0)
+					args := make([]string, 0)
 					// first item in runs list is entrypoint, rest are prefix of args
 					if a.Runs != nil {
 						runs := a.Runs.Split()
