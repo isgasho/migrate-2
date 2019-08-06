@@ -30,7 +30,7 @@ workflow "on pull request" {
 }
 action "say hi" {
     uses = "docker/whalesay@master"
-    runs = "whalesay hello actions"
+    runs = "cowsay hello actions"
 }
 ```
 
@@ -53,7 +53,7 @@ jobs:
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: whalesay
+      entrypoint: cowsay
       args: hello actions
 ```
 
@@ -68,7 +68,7 @@ jobs:
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: whalesay
+      entrypoint: cowsay
       args: hello actions
 ```
 
