@@ -1,12 +1,12 @@
 package commands
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"runtime/debug"
 
 	"github.com/actions/migrate/converter"
 	"github.com/spf13/cobra"
@@ -19,14 +19,14 @@ var rootCmd = &cobra.Command{
 	Use:   "migrate-actions",
 	Short: "CLI for migrating Actions main.workflow files to the new YAML syntax.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do logic here.
-		helpFlag := flag.Bool("help", false, "outputs help")
-		flag.Parse()
-
-		if *helpFlag {
-			flag.Usage()
-			os.Exit(0)
-		}
+		// handle any panics
+		defer (func() {
+			if rv := recover(); rv != nil {
+				fmt.Fprintf(os.Stderr, "actions-migrate had an unexpected error. Please create an issue with the output below, and your main.workflow file if possible, at https://github.com/actions/migrate/issues/new\n\n%s",
+					debug.Stack())
+				os.Exit(1)
+			}
+		})()
 
 		// find root
 		rootDir := "."
