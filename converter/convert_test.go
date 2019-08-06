@@ -278,7 +278,8 @@ jobs:
     - name: action one
       uses: docker://alpine
       with:
-        entrypoint: sh -c echo hi there
+        entrypoint: sh
+        args: -c echo hi there
 `,
 		},
 	})
@@ -308,7 +309,8 @@ jobs:
     - name: action one
       uses: docker://alpine
       with:
-        entrypoint: sh -c echo ${{ github.sha }}
+        entrypoint: sh
+        args: -c echo ${{ github.sha }}
 `,
 		},
 	})

@@ -1,8 +1,8 @@
 package converter
 
 type with struct {
-	Args       string `yaml:",omitempty"`
 	Entrypoint string `yaml:",omitempty"`
+	Args       string `yaml:",omitempty"`
 }
 
 type action struct {

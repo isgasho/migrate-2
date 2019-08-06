@@ -72,11 +72,20 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 				}
 				if a.Runs != nil || a.Args != nil {
 					ca.With = with{}
+					args := make([]string,0)
+					// first item in runs list is entrypoint, rest are prefix of args
 					if a.Runs != nil {
-						ca.With.Entrypoint = convertCommandExpressions(a.Runs.Split())
+						runs := a.Runs.Split()
+						if len(runs) > 0 {
+							ca.With.Entrypoint = runs[0]
+							args = runs[1:]
+						}
 					}
 					if a.Args != nil {
-						ca.With.Args = convertCommandExpressions(a.Args.Split())
+						args = append(args, a.Args.Split()...)
+					}
+					if len(args) > 0 {
+						ca.With.Args = convertCommandExpressions(args)
 					}
 				}
 				j.Actions = append(j.Actions, ca)
