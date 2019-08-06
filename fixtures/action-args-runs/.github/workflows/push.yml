@@ -8,8 +8,8 @@ jobs:
     - name: args runs array
       uses: docker://alpine
       with:
-        args: echo hi
-        entrypoint: some thing
+        entrypoint: some
+        args: thing echo hi
     - name: args array
       uses: docker://alpine
       with:
@@ -17,8 +17,8 @@ jobs:
     - name: args runs
       uses: docker://alpine
       with:
-        args: echo hi
-        entrypoint: some thing
+        entrypoint: some
+        args: thing echo hi
     - name: args
       uses: docker://alpine
       with:
