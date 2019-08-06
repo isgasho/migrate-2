@@ -1,4 +1,4 @@
-# convert-workflows tool
+# migrate-actions tool
 
 Converts GitHub Actions `main.workflow` files into the new `.yml` syntax. Pre-built binaries are available for Linux, OSX and Windows, and it can be built for any environment that Go supports.
 
