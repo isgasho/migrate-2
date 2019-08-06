@@ -5,5 +5,6 @@ jobs:
     name: "emoji actions \U0001F648 yay    ' : "
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: "emoji actions \U0001F648 yay    ' : "
       uses: docker://alpine

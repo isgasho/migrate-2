@@ -4,6 +4,7 @@ jobs:
   new-task:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: new-task
       uses: docker://alpine
       with:

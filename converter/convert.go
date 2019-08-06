@@ -65,7 +65,11 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 				j.Name = resolved.Identifier
 			}
 
-			j.Actions = make([]*action, 0, len(acts))
+			j.Actions = []*action{
+				&action{
+					Uses: "actions/checkout@master",
+				},
+			}
 			for _, a := range acts {
 				ca := &action{
 					Uses: a.Uses.String(),

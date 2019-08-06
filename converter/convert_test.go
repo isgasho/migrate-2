@@ -35,6 +35,7 @@ jobs:
     name: action one
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: action one
       uses: docker://alpine
       with:
@@ -85,6 +86,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
     - name: C
@@ -131,6 +133,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
 `,
@@ -142,6 +145,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
 `,
@@ -184,6 +188,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
 `,
@@ -193,6 +198,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
 `,
@@ -202,6 +208,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
 `,
@@ -244,6 +251,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: ./A
       env:
@@ -275,6 +283,7 @@ jobs:
     name: action one
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: action one
       uses: docker://alpine
       with:
@@ -306,6 +315,7 @@ jobs:
     name: action one
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: action one
       uses: docker://alpine
       with:

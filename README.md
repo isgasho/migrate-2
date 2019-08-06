@@ -52,6 +52,7 @@ jobs:
     name: say hi
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: say hi
       uses: docker/whalesay@master
       with:
@@ -69,6 +70,7 @@ jobs:
     name: say hi
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: say hi
       uses: docker/whalesay@master
       with:

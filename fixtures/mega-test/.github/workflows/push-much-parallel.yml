@@ -4,6 +4,7 @@ jobs:
   A:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: A
       uses: docker://alpine
     - name: C

@@ -5,6 +5,7 @@ jobs:
     name: NPM install
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: NPM install
       uses: actions/npm@master
       with:

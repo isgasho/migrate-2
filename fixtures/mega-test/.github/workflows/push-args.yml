@@ -5,6 +5,7 @@ jobs:
     name: string args
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: string args
       uses: docker://alpine
       with:
