@@ -40,7 +40,7 @@ jobs:
     displayName: Check format
     continueOnError: true
     workingDirectory: $(wd)
-    condition: ne(variables['os'], 'vs2017-win2016')
+    condition: ne(variables['osname'], 'windows')
   - bash: ./script/build $(bin)
     displayName: Build
     workingDirectory: $(wd)
