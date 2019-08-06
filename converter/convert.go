@@ -88,9 +88,18 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 						ca.With.Args = convertCommandExpressions(args)
 					}
 				}
+				if a.Secrets != nil {
+					if ca.Env == nil {
+						ca.Env = make(map[string]string)
+					}
+					for _, secret := range a.Secrets {
+						ca.Env[secret] = fmt.Sprintf("${{ secrets.%s }}", secret)
+					}
+				}
 				j.Actions = append(j.Actions, ca)
 			}
 		}
+
 		w.Jobs[id] = j
 
 		// if we have a single workflow for an event, name the file after that event

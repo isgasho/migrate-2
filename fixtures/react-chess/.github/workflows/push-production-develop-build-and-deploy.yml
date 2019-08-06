@@ -23,6 +23,8 @@ jobs:
         args: build -t roryclaasen/reactchess .
     - name: Login Heroku
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:login
     - name: Filter Production
@@ -31,9 +33,13 @@ jobs:
         args: branch master
     - name: Push Heroku Production
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:push -a react-chessgame web
     - name: Release Heroku Production
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:release -a react-chessgame web

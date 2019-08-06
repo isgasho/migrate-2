@@ -11,6 +11,8 @@ jobs:
         args: install
     - name: Login Heroku
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:login
     - name: Filter Develop
@@ -23,6 +25,8 @@ jobs:
         args: run lint
     - name: Push Heroku Develop
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:push -a react-chessgame-dev web
     - name: Build Project
@@ -31,6 +35,8 @@ jobs:
         args: run build
     - name: Release Heroku Develop
       uses: actions/heroku@master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: container:release -a react-chessgame-dev web
     - name: Docker Build
