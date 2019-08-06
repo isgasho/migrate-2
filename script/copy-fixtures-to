@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# A script to copy over all fixtures to this repo's workflow folder for functional testing
+
+mkdir -p .github/workflows
+
+i=0
+while read f; do
+    i=$(( $i + 1 ))
+    n=$(basename $f)
+    cp $f .github/workflows/${n/.yml/-$i.yml}
+done < <(find fixtures -name '*.yml')
