@@ -183,14 +183,18 @@ jobs:
 
 </table>
 
-## Build
+## Contributing
+
+You don't need the following to use the tool, but if you'd like to contribute here's how.
+
+### Build
 
 - Prerequesites: Go 1.12.x, `dep`
 - Clone project
 - Run `./script/bootstrap`
 - Run `./script/build`
 
-## Releasing
+### Releasing
 
 - Make your change following the [contribution guide](CONTRIBUTING.md)
 - Once you've merged your PR to master run `./script/release` locally, and CI will create a new release with the binaries
