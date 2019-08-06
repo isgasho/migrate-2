@@ -8,11 +8,9 @@ import (
 
 var spaces = regexp.MustCompile(`\s+`)
 
-var unsafeForID = regexp.MustCompile(`[^\pL\pN\pZ\pP]+`)
+var safeID = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_-]*$`)
+
 func toID(s string) string {
-	if unsafeForID.MatchString(s) {
-		return "build"
-	}
 	s = strings.TrimSpace(s)
 	substrs := spaces.Split(s, -1)
 	op := strings.Builder{}
@@ -35,7 +33,13 @@ func toID(s string) string {
 		}
 		op.WriteString(sub)
 	}
-	return op.String()
+	// be pretty conservative - we only have one job so there's no clashng, and we set name if the build isn't equal to
+	// identifer anyway, so users' names will be used.
+	c := op.String()
+	if safeID.MatchString(c) {
+		return c
+	}
+	return "build"
 }
 
 var notUnicodeLetterRE = regexp.MustCompile(`[^\pL\pS\pN]+`)
