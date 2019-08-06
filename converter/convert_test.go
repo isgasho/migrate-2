@@ -279,7 +279,7 @@ jobs:
       uses: docker://alpine
       with:
         entrypoint: sh
-        args: -c echo hi there
+        args: -c "echo hi there"
 `,
 		},
 	})
@@ -310,7 +310,7 @@ jobs:
       uses: docker://alpine
       with:
         entrypoint: sh
-        args: -c echo ${{ github.sha }}
+        args: -c "echo ${{ github.sha }}"
 `,
 		},
 	})

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"io"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/actions/workflow-parser/model"
@@ -78,14 +80,15 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 						runs := a.Runs.Split()
 						if len(runs) > 0 {
 							ca.With.Entrypoint = runs[0]
-							args = runs[1:]
+							args = convertCommandExpressions(a.Runs, 1)
 						}
 					}
 					if a.Args != nil {
-						args = append(args, a.Args.Split()...)
+						as := convertCommandExpressions(a.Args, 0)
+						args = append(args, as...)
 					}
 					if len(args) > 0 {
-						ca.With.Args = convertCommandExpressions(args)
+						ca.With.Args = strings.Join(args, " ")
 					}
 				}
 				if a.Secrets != nil {
@@ -111,12 +114,34 @@ func fromConfiguration(configuration *model.Configuration) (*parsed, error) {
 	return &converted, nil
 }
 
-func convertCommandExpressions(ss []string) string {
-	out := make([]string, 0, len(ss))
-	for _, s := range ss {
-		out = append(out, convertGithubEnvironmentReferences(s))
+// we shouldn't have control in args, but just to include TAB, CR, LF
+var seperatorOrControlRE = regexp.MustCompile(`[\pC\pZ]`)
+
+func convertCommandExpressions(ss model.Command, skipUntilIndex int) []string {
+	out := make([]string, 0)
+	switch cl := ss.(type) {
+	case *model.ListCommand:
+		// ensure all are
+		for i, v := range cl.Values {
+			if skipUntilIndex > i {
+				continue
+			}
+			if seperatorOrControlRE.MatchString(v) {
+				out = append(out, strconv.Quote(v))
+			} else {
+				out = append(out, v)
+			}
+		}
+	case *model.StringCommand:
+		out = cl.Split()
+		out = out[skipUntilIndex:]
 	}
-	return strings.Join(out, " ")
+
+	converted := make([]string, 0, len(out))
+	for _, s := range out {
+		converted = append(converted, convertGithubEnvironmentReferences(s))
+	}
+	return converted
 }
 
 var replacements = []string{
