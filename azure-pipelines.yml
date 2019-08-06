@@ -59,12 +59,12 @@ jobs:
     inputs:
       rootFolderOrFile: '$(wd)/bin/$(bin)'
       archiveType: $(archive)
-      archiveFile: '$(wd)/migrate-actions-$(os).$(archive)'
+      archiveFile: '$(wd)/migrate-actions-$(osname).$(archive)'
       verbose: true
   - task: PublishBuildArtifacts@1
     #condition: eq(variables['Build.SourceBranchName'], 'master')
     inputs:
-      pathtoPublish: '$(wd)/migrate-actions-$(os).$(archive)'
+      pathtoPublish: '$(wd)/migrate-actions-$(osname).$(archive)'
       artifactName: $(osname)
 - job: release
   dependsOn: perOS
