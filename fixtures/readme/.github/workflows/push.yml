@@ -8,5 +8,5 @@ jobs:
     - name: say hi
       uses: docker/whalesay@master
       with:
-        entrypoint: whalesay
+        entrypoint: cowsay
         args: hello actions

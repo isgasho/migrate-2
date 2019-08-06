@@ -8,5 +8,5 @@ workflow "on pull request" {
 }
 action "say hi" {
     uses = "docker/whalesay@master"
-    runs = "whalesay hello actions"
+    runs = "cowsay hello actions"
 }

@@ -50,11 +50,13 @@ name: on pull request
 jobs:
   sayHi:
     name: say hi
+    runs-on: ubuntu-latest
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: cowsay
-      args: hello actions
+      with:
+        entrypoint: cowsay
+        args: hello actions
 ```
 
 Next, it will produce a configuration file for pushes, `.github/workflows/push.yml`:
@@ -65,11 +67,13 @@ name: on push
 jobs:
   sayHi:
     name: say hi
+    runs-on: ubuntu-latest
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: cowsay
-      args: hello actions
+      with:
+        entrypoint: cowsay
+        args: hello actions
 ```
 
 You can then delete your `main.workflow`. If you have any `.yml` files in `.github/workflows` your `main.workflow` will be ignored.
