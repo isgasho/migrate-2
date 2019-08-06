@@ -14,7 +14,8 @@ and unarchive it.
 
 ## Usage
 
-Once you've downloaded it, navigate to a repository using Actions V1 and run the `migrate-actions` executable (`migrate-actions.exe` on windows).
+Once you've downloaded and unarchived the tool, navigate to a repository using Actions via a `main.workflow` file and run the `migrate-actions` executable (`migrate-actions.exe` on windows),
+locating it by the full path to the executable e.g `~/Downloads/migrate-actions-osx/migrate-actions` on OSX.
 
 Given an existing `.github/main.workflow`:
 
@@ -52,7 +53,8 @@ jobs:
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: whalesay hello actions
+      entrypoint: whalesay
+      args: hello actions
 ```
 
 Next, it will produce a configuration file for pushes, `.github/workflows/push.yml`:
@@ -66,7 +68,8 @@ jobs:
     steps:
     - name: say hi
       uses: docker/whalesay@master
-      entrypoint: whalesay hello actions
+      entrypoint: whalesay
+      args: hello actions
 ```
 
 You can then delete your `main.workflow`. If you have any `.yml` files in `.github/workflows` your `main.workflow` will be ignored.
