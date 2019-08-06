@@ -8,7 +8,11 @@ import (
 
 var spaces = regexp.MustCompile(`\s+`)
 
+var unsafeForID = regexp.MustCompile(`[^\pL\pN\pZ\pP]+`)
 func toID(s string) string {
+	if unsafeForID.MatchString(s) {
+		return "build"
+	}
 	s = strings.TrimSpace(s)
 	substrs := spaces.Split(s, -1)
 	op := strings.Builder{}
