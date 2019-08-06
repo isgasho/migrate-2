@@ -4,11 +4,17 @@ Converts GitHub Actions `main.workflow` files into the new `.yml` syntax. Pre-bu
 
 ## Install
 
-Head over to the [releases](https://github.com/actions/migrate/releases) tab, and download the executable for your operating system.
+Head over to the [releases](https://github.com/actions/migrate/releases) tab, and download the archive for your operating system:
+
+- Windows: migrate-actions-windows.zip
+- Linux: migrate-actions-linux.tar
+- OSX: migrate-actions-osx.tar
+
+and unarchive it.
 
 ## Usage
 
-Once you've downloaded it, navigate to a repository using Actions V1 and run the `migrate-actions` executable.
+Once you've downloaded it, navigate to a repository using Actions V1 and run the `migrate-actions` executable (`migrate-actions.exe` on windows).
 
 Given an existing `.github/main.workflow`:
 

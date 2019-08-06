@@ -16,14 +16,17 @@ jobs:
         os: vs2017-win2016
         osname: windows
         bin: migrate-actions.exe
+        archive: zip
       linux:
         os: 'ubuntu-16.04'
         osname: linux
-        bin: migrate-actions-linux
+        bin: migrate-action
+        archive: tar
       osx:
         os: macOS-10.13
         osname: osx
-        bin: migrate-actions-osx
+        bin: migrate-actions
+        archive: tar
   pool:
     vmImage: $(os)
   steps:
@@ -51,17 +54,21 @@ jobs:
   - bash: bash ./script/fixtures-test $(bin)
     workingDirectory: $(wd)
     displayName: "Functional test of binary"
-  - bash: rm -f ./bin/migrate-actions
-    workingDirectory: $(wd)
-    displayName: "Remove non-os specific binary"
-  - task: PublishBuildArtifacts@1
-    condition: eq(variables['Build.SourceBranchName'], 'master')
+  - task: ArchiveFiles@2
+    # condition: eq(variables['Build.SourceBranchName'], 'master')
     inputs:
-      pathtoPublish: '$(wd)/bin'
+      rootFolderOrFile: '$(wd)/bin'
+      archiveType: $(archive)
+      archiveFile: '$(wd)/migrate-actions-$(os).$(archive)'
+      verbose: true
+  - task: PublishBuildArtifacts@1
+    #condition: eq(variables['Build.SourceBranchName'], 'master')
+    inputs:
+      pathtoPublish: '$(wd)/migrate-actions-$(os).$(archive)'
       artifactName: $(osname)
 - job: release
   dependsOn: perOS
-  condition: eq(variables['Build.SourceBranchName'], 'master')
+  # condition: eq(variables['Build.SourceBranchName'], 'master')
   steps:
   - checkout: none
   - task: DownloadBuildArtifacts@0
@@ -82,7 +89,6 @@ jobs:
       downloadType: 'single'
       artifactName: windows
       downloadPath: '$(Build.ArtifactStagingDirectory)/windows'
-  - bash: find $(Build.ArtifactStagingDirectory) -type -f | while read f; do chmod +x "$f"; done
   - task: GitHubRelease@0
     inputs:
       gitHubConnection: migrate
