@@ -1,3 +1,5 @@
+go_src := $(wildcard *.go */*.go */**/*.go)
+
 bin/migrate-actions: $(go_src)
 	script/build
 
