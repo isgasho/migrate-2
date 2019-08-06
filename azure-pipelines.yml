@@ -51,6 +51,9 @@ jobs:
   - bash: bash ./script/fixtures-test $(bin)
     workingDirectory: $(wd)
     displayName: "Functional test of binary"
+  - bash: rm -f ./bin/migrate-actions
+    workingDirectory: $(wd)
+    displayName: "Remove non-os specific binary"
   - task: PublishBuildArtifacts@1
     condition: eq(variables['Build.SourceBranchName'], 'master')
     inputs:
