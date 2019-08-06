@@ -20,7 +20,7 @@ jobs:
       linux:
         os: 'ubuntu-16.04'
         osname: linux
-        bin: migrate-action
+        bin: migrate-actions
         archive: tar
       osx:
         os: macOS-10.13
